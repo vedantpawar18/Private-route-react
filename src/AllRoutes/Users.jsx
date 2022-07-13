@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link,useSearchParams } from 'react-router-dom'
+// import { AuthContext } from '../Context/AuthContext';
 
 const Users = () => {
     const [data, setData] =useState([]);
+    const [page, setPage]= useState(Number(searchParams.get("page")) || 1);
+    const [searchParams, setSearchParams] = useSearchParams();
+
     useEffect(()=>{
-        fetch(`https://reqres.in/api/users`)
+        setSearchParams({
+            page
+        })
+        fetch(`https://reqres.in/api/users?page=${page}`)
         .then((res)=>res.json())
         .then((res)=>{
             setData(res.data)
         })
-    },[]);
+    },[page]);
+
+   
   return (
     <div>
         <h3>Users Page</h3>
@@ -23,6 +32,10 @@ const Users = () => {
                     </div>
                 </div>
             ))}
+        </div>
+        <div>
+            <button disabled={page===1} onClick={()=> setPage(1)}>1</button>
+            <button disabled={page===2} onClick={()=> setPage(2)}>2</button>
         </div>
     </div>
   )
